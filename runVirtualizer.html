@@ -1,0 +1,175 @@
+<html>
+<head>
+<style type="text/css">
+  #container {
+    max-width: 50%;
+    height: 700px;
+    margin: auto;
+  }
+</style>
+</head>
+<body>
+<div id="container"></div>
+<script src="sigma.min.js"></script>
+<script src="plugins/sigma.parsers.json.min.js"></script>
+<script src="plugins/sigma.layout.forceAtlas2.min.js"></script>
+
+<div id="container">
+  <style>
+    #webgl {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 50%;
+      color: #fff;
+      background: #fff;
+      position: absolute;
+    }
+
+    #canvas {
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      right: 0;
+      color: #000;
+      background: #fff;
+      position: absolute;
+    }
+
+    .label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1;
+      font-family: sans-serif;
+    }
+  </style>
+  <div id="webgl">
+    <p id="stop" style="font-size:20px; color:#000;"> Stop Layout</p>
+    <div class="label"></div>
+  </div>
+  <div id="canvas">
+    <p id="stop2" style="font-size:20px; color:#000;"> Stop Layout</p>
+    <div class="label"></div>
+  </div>
+</div>
+<script>
+
+
+function init() {
+
+     // Create an <input> element, set its type and name attributes
+       var f = document.createElement("form");
+       f.setAttribute('method',"post");
+       f.id = "form1";   
+        
+       var text = document.createTextNode("First Graph");
+      // Create an <input> element, set its type and name attributes
+      var input = document.createElement("input");
+      input.type = "text";
+      input.id = "input1";
+      f.appendChild(text);
+      // Append a line break 
+      f.appendChild(document.createElement("br"));
+      f.appendChild(input);  
+      f.appendChild(document.createElement("br"));
+      f.appendChild(document.createElement("br"));        
+      var text = document.createTextNode("Second Graph");
+      // Create an <input> element, set its type and name attributes
+      var input = document.createElement("input");
+      input.type = "text";
+      input.id = "input2";
+      f.appendChild(text);
+      // Append a line break 
+      f.appendChild(document.createElement("br"));
+      f.appendChild(input);  
+      f.appendChild(document.createElement("br"));
+      f.appendChild(document.createElement("br"));        
+        
+       
+      
+    
+       //buton event i ile beraber php nin server kontrollerinin çalıştırılacağı kısım
+       var myButton = document.createElement("BUTTON");
+       myButton.setAttribute("type","button");
+       myButton.id = "button1";
+       myButton.appendChild(document.createTextNode("Start"));       
+       f.appendChild(myButton)        
+       document.getElementById("webgl").appendChild(f);
+       myButton.addEventListener("click",function () { 
+
+          var value1 = document.getElementById("input1").value;
+          var value2 = document.getElementById("input2").value;
+
+            
+               document.getElementById("webgl").removeChild(document.getElementById("form1"));
+
+
+                sigma.parsers.json(value1, {
+                  container: 'webgl',
+                  renderer: {
+                      container: document.getElementById('webgl'),
+                      type: 'canvas'
+                  },
+                   
+                }, function(s) {
+                    s.startForceAtlas2();
+                    var isRunning = true;
+                    document.getElementById('stop').addEventListener('click',function(){
+                        if(isRunning){
+                            isRunning = false;
+                            s.stopForceAtlas2();
+                            document.getElementById('stop').innerHTML = 'Start Layout';
+                        }else{
+                            isRunning = true;
+                            s.startForceAtlas2();
+                            document.getElementById('stop').innerHTML = 'Stop Layout';
+                        }
+                    },true);
+                    
+                });
+                
+                sigma.parsers.json(value2, {
+                    container: 'canvas',
+                    renderer: {
+                        container: document.getElementById('canvas'),
+                        type: 'canvas'
+                    },
+                   
+                }, function(s) {
+                    s.startForceAtlas2();
+                    var isRunning = true;
+                    document.getElementById('stop2').addEventListener('click',function(){
+                        if(isRunning){
+                            isRunning = false;
+                            s.stopForceAtlas2();
+                            document.getElementById('stop2').innerHTML = 'Start Layout';
+                        }else{
+                            isRunning = true;
+                            s.startForceAtlas2();
+                            document.getElementById('stop2').innerHTML = 'Stop Layout';
+                        }
+                    },true);
+                    
+                });
+
+               
+        });     
+
+
+
+      
+       
+     
+       
+   
+}
+
+   if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', init, false);
+    } else {
+      window.onload = init;
+    }  
+</script>
+</body>
+</html>
